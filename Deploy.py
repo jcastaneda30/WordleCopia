@@ -207,7 +207,7 @@ while True:
         return adivina
 
     if enviar_palabra and iniciar_juego and contador<6:
-        print(adivina)
+        #print(adivina)
         enviar_palabra=False
         dibujar(texto_respuesta,adivina,int(texto))
 
