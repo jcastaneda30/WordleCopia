@@ -1,5 +1,7 @@
 import pygame
 import sys
+import PalabrasPosibles
+import random
 
 pygame.init()
 numeros = ['4','5','6','7','8']
@@ -14,6 +16,12 @@ active = False
 rectangulo_empezar_juego = pygame.Rect(630, 40, 85, 28)
 color_boton = (81, 157, 176)
 iniciar_juego = False
+
+#Boton empezar juego de nuevo
+
+rectangulo_nuevo_juego = pygame.Rect(800,550,110,28)
+color_boton_nuevo_juego = (81, 157, 176)
+iniciar_juego_nuevo = False
 
 #Escribir palabra
 rectangulo_respuesta = pygame.Rect(390, 630, 140, 28)
@@ -39,21 +47,42 @@ texto = ''
 texto_respuesta = ''
 
 contador = 0
+ganadas=0
+perdidas=0
+
+
+
+
+
 
 
 def dibujar(palabra,adivinar,columnas):
-    global contador
+    global contador,ganadas,perdidas
     ancho_cuadro = (SIZE[0] - (columnas + 1) * 10) // columnas
+    conteo_palabras = dict()
+
+    for i in range(len(adivinar)):
+        if adivinar[i]==palabra[i]:
+            conteo_palabras[adivinar[i]]=0
+            continue
+        if adivinar[i] not in conteo_palabras:
+            conteo_palabras[adivinar[i]]=1
+        else:
+            conteo_palabras[adivinar[i]]+=1
+
     for i, letra in enumerate(list(palabra)):
+
         x = 10 + i * (ancho_cuadro + 10)
         y = 100 + contador * (60 + 10)
         #Logica para cambiar los colores
         if letra == adivinar[i]:
             color = "#a2f285"
-        elif letra in adivinar:
+        elif letra in adivinar and conteo_palabras[letra]!=0:
             color = "#d985f2"
+            conteo_palabras[letra]-=1
         else:
             color = "#8f9ba1"
+        print()
         #Termina lógica
         pygame.draw.rect(pantalla, color, (x, y, ancho_cuadro, 60))
         font = pygame.font.Font(None, 36)
@@ -61,7 +90,23 @@ def dibujar(palabra,adivinar,columnas):
         pantalla.blit(letra_surface, (x + ancho_cuadro // 2 - 10, y + 60 // 2 - 10))
 
     if palabra == adivinar:
-        pass #Aquí que pasa si gana
+        # Boton nuevo juego
+        texto_nuevo_juego = fuente.render("Nuevo juego", True, (0, 0, 0))
+        pygame.draw.rect(pantalla, color_boton, rectangulo_nuevo_juego)
+        pantalla.blit(texto_nuevo_juego, (rectangulo_nuevo_juego.x + 5, rectangulo_nuevo_juego.y + 5))
+
+        ganadas+=1
+        #Para que no pueda seguir agregando palabras
+        contador=6
+        print("gano")
+    elif contador>=5:
+        # Boton nuevo juego
+        texto_nuevo_juego = fuente.render("Nuevo juego", True, (0, 0, 0))
+        pygame.draw.rect(pantalla, color_boton, rectangulo_nuevo_juego)
+        pantalla.blit(texto_nuevo_juego, (rectangulo_nuevo_juego.x + 5, rectangulo_nuevo_juego.y + 5))
+
+        perdidas+=1
+        print("perdio")
     
     contador += 1
     pygame.display.update()
@@ -85,9 +130,18 @@ while True:
                 active = False
                 
             if rectangulo_empezar_juego.collidepoint(event.pos):
+                adivina = escoger_palabra(int(texto))
+                contador=0
                 iniciar_juego = True
                 pantalla.fill(colorPantalla)
 
+            if rectangulo_nuevo_juego.collidepoint(event.pos):
+                iniciar_juego=False
+                enviar_palabra=False
+                contador = 0
+                texto=""
+                texto_respuesta=""
+                pantalla.fill(colorPantalla)
 
             #Usuario selecciona el cuadro de respuesta
             if rectangulo_respuesta.collidepoint(event.pos):
@@ -97,7 +151,8 @@ while True:
                 active_respuesta = False
             
             if rectangulo_enviar_palabra.collidepoint(event.pos):
-                enviar_palabra = True
+                if len(texto_respuesta)==int(texto) and texto_respuesta in escoger_lista(int(texto)):
+                    enviar_palabra = True
                 
             # Change the current color of the input box.
             color_entrada_dificultad = color_active if active else color_inactive
@@ -120,15 +175,43 @@ while True:
                 elif event.key == pygame.K_BACKSPACE:
                     texto_respuesta = texto_respuesta[:-1]
                 else:
-                    texto_respuesta += (event.unicode).lower()
-                    print(texto_respuesta)
+                    if len(texto_respuesta)<int(texto):
+                        texto_respuesta += (event.unicode).lower()
+                        print(texto_respuesta)
 
-    if enviar_palabra:
+    def escoger_lista(dificultad):
+        if dificultad==4:
+            lista_posible=PalabrasPosibles.Palabras4Letras
+        elif dificultad==5:
+            lista_posible=PalabrasPosibles.Palabras5Letras
+        elif dificultad==6:
+            lista_posible=PalabrasPosibles.Palabras6Letras
+        elif dificultad==7:
+            lista_posible=PalabrasPosibles.Palabras7Letras
+        elif dificultad==8:
+            lista_posible=PalabrasPosibles.Palabras8Letras
+        return lista_posible
+
+    def escoger_palabra(dificultad):
+
+        if dificultad==4:
+            adivina=random.choice(PalabrasPosibles.Palabras4Letras)
+        elif dificultad==5:
+            adivina = random.choice(PalabrasPosibles.Palabras5Letras)
+        elif dificultad==6:
+            adivina = random.choice(PalabrasPosibles.Palabras6Letras)
+        elif dificultad==7:
+            adivina = random.choice(PalabrasPosibles.Palabras7Letras)
+        elif dificultad==8:
+            adivina = random.choice(PalabrasPosibles.Palabras8Letras)
+        return adivina
+
+    if enviar_palabra and iniciar_juego and contador<6:
+        print(adivina)
         enviar_palabra=False
-        dibujar(texto_respuesta,"vicioooo",int(texto))
-    
-    
-    
+        dibujar(texto_respuesta,adivina,int(texto))
+
+
     # Intrucciones
     instruccion = fuente.render("Da click y escribe la dificultad de 4 a 8", True, (0, 0, 0))
     pantalla.blit(instruccion, (350, rectangulo_user_input.y + 35))
@@ -144,8 +227,7 @@ while True:
     textoComenzar = fuente.render("Empezar", True, (0, 0, 0))
     pygame.draw.rect(pantalla, color_boton, rectangulo_empezar_juego)
     pantalla.blit(textoComenzar, (rectangulo_empezar_juego.x + 5, rectangulo_empezar_juego.y + 5))
-    
-    
+
     #Escribir palabra juego
     txt_respuesta = fuente.render(texto_respuesta, True, (0, 0, 0))
     width_respuesta = max(200, txt_respuesta.get_width() + 10)
@@ -161,5 +243,13 @@ while True:
     # Intrucciones
     instruccion_respuesta = fuente.render("Escribe aqui la palabra que creas que pueda ser", True, (0, 0, 0))
     pantalla.blit(instruccion_respuesta, (350, rectangulo_respuesta.y + 35))
+
+    #Instruciones
+    instruccion_ganadas=fuente.render(f"Partidas Ganadas:      {ganadas}", True, (0, 0, 0))
+    pantalla.blit(instruccion_ganadas, (100, rectangulo_nuevo_juego.x-250))
+
+    # Instruciones
+    instruccion_ganadas = fuente.render(f"Partidas Perdidas:      {perdidas}", True, (0, 0, 0))
+    pantalla.blit(instruccion_ganadas, (100, rectangulo_nuevo_juego.x - 200))
 
     pygame.display.flip()

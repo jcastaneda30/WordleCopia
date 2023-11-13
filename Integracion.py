@@ -11,8 +11,8 @@ SCREEN = pygame.display.set_mode(SIZE)
 
 # Nombre ventana e icono
 pygame.display.set_caption("Juego Wordle")
-ICON = pygame.image.load("imagenes/logo.png")
-pygame.display.set_icon(ICON)
+#ICON = pygame.image.load("imagenes/logo.png")
+#pygame.display.set_icon(ICON)
 
 
 # Palabra a adivinar 
