@@ -4,6 +4,11 @@ import PalabrasPosibles
 import random
 
 pygame.init()
+
+pygame.display.set_caption("Juego Wordle")
+icon = pygame.image.load("imagenes/logo.png")
+pygame.display.set_icon(icon)
+
 numeros = ['4','5','6','7','8']
 # Escribir dificultad
 rectangulo_user_input = pygame.Rect(390, 40, 140, 28)
@@ -76,9 +81,9 @@ def dibujar(palabra,adivinar,columnas):
         y = 100 + contador * (60 + 10)
         #Logica para cambiar los colores
         if letra == adivinar[i]:
-            color = "#a2f285"
+            color = "#6aaa64"
         elif letra in adivinar and conteo_palabras[letra]!=0:
-            color = "#d985f2"
+            color = "#c9b458"
             conteo_palabras[letra]-=1
         else:
             color = "#8f9ba1"
@@ -99,6 +104,11 @@ def dibujar(palabra,adivinar,columnas):
         #Para que no pueda seguir agregando palabras
         contador=6
         print("gano")
+
+        # Mensaje si gana
+        mensaje_gana = fuente.render("Felicidades, adivinó la palabra", True, (0, 0, 0))
+        pantalla.blit(mensaje_gana, (rectangulo_nuevo_juego.x-400, rectangulo_nuevo_juego.y+20))
+
     elif contador>=5:
         # Boton nuevo juego
         texto_nuevo_juego = fuente.render("Nuevo juego", True, (0, 0, 0))
@@ -107,6 +117,10 @@ def dibujar(palabra,adivinar,columnas):
 
         perdidas+=1
         print("perdio")
+
+        # Mensaje si pierde
+        mensaje_pierde = fuente.render(f"Perdiste, la palabra era {adivina}", True, (0, 0, 0))
+        pantalla.blit(mensaje_pierde, (rectangulo_nuevo_juego.x-400, rectangulo_nuevo_juego.y+20))
     
     contador += 1
     pygame.display.update()
@@ -207,7 +221,7 @@ while True:
         return adivina
 
     if enviar_palabra and iniciar_juego and contador<6:
-        #print(adivina)
+        print(adivina)
         enviar_palabra=False
         dibujar(texto_respuesta,adivina,int(texto))
 
