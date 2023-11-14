@@ -42,7 +42,7 @@ enviar_palabra = False
 
 # Pantalla base
 SIZE = (980, 720)
-fuente = pygame.font.SysFont(None, 25)
+fuente = pygame.font.SysFont( 'bahnschrift', 19)
 pantalla = pygame.display.set_mode(SIZE)
 colorPantalla = (218, 245, 245)
 pantalla.fill(colorPantalla)
@@ -149,6 +149,7 @@ while True:
                 iniciar_juego = True
                 pantalla.fill(colorPantalla)
 
+            #Evento boton empezar
             if rectangulo_nuevo_juego.collidepoint(event.pos):
                 iniciar_juego=False
                 enviar_palabra=False
@@ -158,7 +159,7 @@ while True:
                 pantalla.fill(colorPantalla)
 
             #Usuario selecciona el cuadro de respuesta
-            if rectangulo_respuesta.collidepoint(event.pos):
+            if rectangulo_respuesta.collidepoint(event.pos) and iniciar_juego:
                 # Toggle the active variable.
                 active_respuesta = not active_respuesta
             else:
@@ -172,26 +173,29 @@ while True:
             color_entrada_dificultad = color_active if active else color_inactive
             color_respuesta = color_active_respuesta if active_respuesta else color_inactive_respuesta
             
-            
-            
         if event.type == pygame.KEYDOWN:
+
             if active:
-                if event.key == pygame.K_RETURN:
-                    print(texto)
-                    texto = ''
+                #Enter empezar
+                if event.key == pygame.K_RETURN and 4<=int(texto)<=8:
+                    adivina = escoger_palabra(int(texto))
+                    contador=0
+                    iniciar_juego = True
+                    pantalla.fill(colorPantalla)
+
                 elif event.key == pygame.K_BACKSPACE:
                     texto = texto[:-1]
                 elif event.unicode in numeros and 4<=int(texto+event.unicode)<=8:
                     texto += event.unicode
             if active_respuesta:
-                if event.key == pygame.K_RETURN:
-                    texto_respuesta = ''
+                if event.key == pygame.K_RETURN and len(texto_respuesta)==int(texto) and texto_respuesta in escoger_lista(int(texto)):
+                    enviar_palabra= True
                 elif event.key == pygame.K_BACKSPACE:
                     texto_respuesta = texto_respuesta[:-1]
                 else:
                     if len(texto_respuesta)<int(texto):
                         texto_respuesta += (event.unicode).lower()
-                        print(texto_respuesta)
+                        print(texto_respuesta)                    
 
     def escoger_lista(dificultad):
         if dificultad==4:
