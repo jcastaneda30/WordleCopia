@@ -149,7 +149,14 @@ while True:
                 iniciar_juego = True
                 pantalla.fill(colorPantalla)
 
-            #Evento boton empezar
+                ancho_cuadro = (SIZE[0] - (int(texto) + 1) * 10) // int(texto)
+                for fila in range(6):
+                    for columna in range(int(texto)):
+                        x = 10 + columna * (ancho_cuadro + 10)
+                        y = 100 + fila * (60 + 10)
+                        pygame.draw.rect(pantalla, "#8f9ba1", (x, y, ancho_cuadro, 60))
+                pygame.display.flip()
+
             if rectangulo_nuevo_juego.collidepoint(event.pos):
                 iniciar_juego=False
                 enviar_palabra=False
@@ -176,12 +183,20 @@ while True:
         if event.type == pygame.KEYDOWN:
 
             if active:
-                #Enter empezar
+                
                 if event.key == pygame.K_RETURN and 4<=int(texto)<=8:
                     adivina = escoger_palabra(int(texto))
                     contador=0
                     iniciar_juego = True
                     pantalla.fill(colorPantalla)
+
+                    ancho_cuadro = (SIZE[0] - (int(texto) + 1) * 10) // int(texto)
+                    for fila in range(6):
+                        for columna in range(int(texto)):
+                            x = 10 + columna * (ancho_cuadro + 10)
+                            y = 100 + fila * (60 + 10)
+                            pygame.draw.rect(pantalla, "#8f9ba1", (x, y, ancho_cuadro, 60))
+                    pygame.display.flip()
 
                 elif event.key == pygame.K_BACKSPACE:
                     texto = texto[:-1]
