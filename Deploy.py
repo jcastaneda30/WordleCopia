@@ -128,7 +128,6 @@ def dibujar(palabra,adivinar,columnas):
 pantalla.fill(colorPantalla)
 
 
-
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -138,7 +137,6 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN:
             #Usuario selecciona la dificultad
             if rectangulo_user_input.collidepoint(event.pos):
-                # Toggle the active variable.
                 active = not active
             else:
                 active = False
@@ -167,7 +165,6 @@ while True:
 
             #Usuario selecciona el cuadro de respuesta
             if rectangulo_respuesta.collidepoint(event.pos) and iniciar_juego:
-                # Toggle the active variable.
                 active_respuesta = not active_respuesta
             else:
                 active_respuesta = False
@@ -176,7 +173,7 @@ while True:
                 if len(texto_respuesta)==int(texto) and texto_respuesta in escoger_lista(int(texto)):
                     enviar_palabra = True
                 
-            # Change the current color of the input box.
+            # Cambiar color de la caja input
             color_entrada_dificultad = color_active if active else color_inactive
             color_respuesta = color_active_respuesta if active_respuesta else color_inactive_respuesta
             
@@ -277,11 +274,11 @@ while True:
     instruccion_respuesta = fuente.render("Escribe aqui la palabra que creas que pueda ser", True, (0, 0, 0))
     pantalla.blit(instruccion_respuesta, (350, rectangulo_respuesta.y + 35))
 
-    #Instruciones
+    #GANADAS
     instruccion_ganadas=fuente.render(f"Partidas Ganadas:      {ganadas}", True, (0, 0, 0))
     pantalla.blit(instruccion_ganadas, (100, rectangulo_nuevo_juego.x-250))
 
-    # Instruciones
+    #PERDIDAS
     instruccion_ganadas = fuente.render(f"Partidas Perdidas:      {perdidas}", True, (0, 0, 0))
     pantalla.blit(instruccion_ganadas, (100, rectangulo_nuevo_juego.x - 200))
 
