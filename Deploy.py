@@ -2,7 +2,8 @@ import pygame
 import sys
 import PalabrasPosibles
 import random
-
+TriesPosibles = {4:PalabrasPosibles.Letras4,5:PalabrasPosibles.Letras5,6:PalabrasPosibles.Letras6,7:PalabrasPosibles.Letras7,8:PalabrasPosibles.Letras8}
+TriePartida = None
 pygame.init()
 
 pygame.display.set_caption("Juego Wordle")
@@ -170,7 +171,9 @@ while True:
                 active_respuesta = False
             
             if rectangulo_enviar_palabra.collidepoint(event.pos):
-                if len(texto_respuesta)==int(texto) and texto_respuesta in escoger_lista(int(texto)):
+                print("aaaaaaaaaaaaa")
+                print(TriePartida.search(texto_respuesta))
+                if len(texto_respuesta)==int(texto) and TriePartida.search(texto_respuesta):
                     enviar_palabra = True
                 
             # Cambiar color de la caja input
@@ -200,7 +203,7 @@ while True:
                 elif event.unicode in numeros and 4<=int(texto+event.unicode)<=8:
                     texto += event.unicode
             if active_respuesta:
-                if event.key == pygame.K_RETURN and len(texto_respuesta)==int(texto) and texto_respuesta in escoger_lista(int(texto)):
+                if event.key == pygame.K_RETURN and len(texto_respuesta)==int(texto) and TriePartida.search(texto_respuesta):
                     enviar_palabra= True
                 elif event.key == pygame.K_BACKSPACE:
                     texto_respuesta = texto_respuesta[:-1]
@@ -210,30 +213,41 @@ while True:
                         print(texto_respuesta)                    
 
     def escoger_lista(dificultad):
+        global TriePartida
         if dificultad==4:
             lista_posible=PalabrasPosibles.Palabras4Letras
+            
         elif dificultad==5:
             lista_posible=PalabrasPosibles.Palabras5Letras
+            
         elif dificultad==6:
             lista_posible=PalabrasPosibles.Palabras6Letras
+            
         elif dificultad==7:
             lista_posible=PalabrasPosibles.Palabras7Letras
+            
         elif dificultad==8:
             lista_posible=PalabrasPosibles.Palabras8Letras
+            
         return lista_posible
 
     def escoger_palabra(dificultad):
-
+        global TriePartida
         if dificultad==4:
             adivina=random.choice(PalabrasPosibles.Palabras4Letras)
+            TriePartida=TriesPosibles[4]
         elif dificultad==5:
             adivina = random.choice(PalabrasPosibles.Palabras5Letras)
+            TriePartida=TriesPosibles[5]
         elif dificultad==6:
             adivina = random.choice(PalabrasPosibles.Palabras6Letras)
+            TriePartida=TriesPosibles[6]
         elif dificultad==7:
             adivina = random.choice(PalabrasPosibles.Palabras7Letras)
+            TriePartida=TriesPosibles[7]
         elif dificultad==8:
             adivina = random.choice(PalabrasPosibles.Palabras8Letras)
+            TriePartida=TriesPosibles[8]
         return adivina
 
     if enviar_palabra and iniciar_juego and contador<6:
