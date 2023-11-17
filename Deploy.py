@@ -88,7 +88,7 @@ def dibujar(palabra,adivinar,columnas):
             conteo_palabras[letra]-=1
         else:
             color = "#8f9ba1"
-        print()
+        #print()
         #Termina lógica
         pygame.draw.rect(pantalla, color, (x, y, ancho_cuadro, 60))
         font = pygame.font.Font(None, 36)
@@ -104,7 +104,7 @@ def dibujar(palabra,adivinar,columnas):
         ganadas+=1
         #Para que no pueda seguir agregando palabras
         contador=6
-        print("gano")
+        #print("gano")
 
         # Mensaje si gana
         mensaje_gana = fuente.render("Felicidades, adivinó la palabra", True, (0, 0, 0))
@@ -117,7 +117,7 @@ def dibujar(palabra,adivinar,columnas):
         pantalla.blit(texto_nuevo_juego, (rectangulo_nuevo_juego.x + 5, rectangulo_nuevo_juego.y + 5))
 
         perdidas+=1
-        print("perdio")
+        #print("perdio")
 
         # Mensaje si pierde
         mensaje_pierde = fuente.render(f"Perdiste, la palabra era {adivina}", True, (0, 0, 0))
@@ -171,8 +171,7 @@ while True:
                 active_respuesta = False
             
             if rectangulo_enviar_palabra.collidepoint(event.pos):
-                print("aaaaaaaaaaaaa")
-                print(TriePartida.search(texto_respuesta))
+                #print(TriePartida.search(texto_respuesta))
                 if len(texto_respuesta)==int(texto) and TriePartida.search(texto_respuesta):
                     enviar_palabra = True
                 
@@ -210,7 +209,7 @@ while True:
                 else:
                     if len(texto_respuesta)<int(texto):
                         texto_respuesta += (event.unicode).lower()
-                        print(texto_respuesta)                    
+                        #print(texto_respuesta)                    
 
     def escoger_lista(dificultad):
         global TriePartida
